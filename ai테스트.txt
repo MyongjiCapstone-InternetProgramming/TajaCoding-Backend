@@ -1,0 +1,20 @@
+.env 
+
+OPENAI_API_KEY = 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
+
+require('dotenv').config();
+const fs = require('fs');
+const path = require('path');
+const openai = require('openai');
+const ai = new openai.OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+})
+
+app.get('/ai', async(req,res)=>{
+    const transcription = await ai.audio.transcriptions.create({
+        file: fs.createReadStream(path.join(__dirname, 'static', 'sound.webm')),
+        model: 'whisper-1'
+    })
+    console.log(transcription.text);
+    res.send({status:200, data:transcription.text});
+})
